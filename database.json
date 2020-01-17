@@ -1,0 +1,4 @@
+{
+  "dev": "postgres://postgres@localhost:5432/indegsercom",
+  "prod": { "ENV": "DATABASE_URL" }
+}

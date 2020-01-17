@@ -1,0 +1,35 @@
+{
+  "name": "sejong",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/indegsercom/sejong.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/indegsercom/sejong/issues"
+  },
+  "homepage": "https://github.com/indegsercom/sejong#readme",
+  "dependencies": {
+    "react": "^16.12.0",
+    "react-dom": "^16.12.0",
+    "slonik": "^21.4.2"
+  },
+  "devDependencies": {
+    "@types/node": "^13.1.7",
+    "@types/react": "^16.9.17",
+    "db-migrate": "^0.11.6",
+    "db-migrate-pg": "^1.0.0",
+    "next": "^9.2.0",
+    "typescript": "^3.7.5"
+  }
+}
