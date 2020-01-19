@@ -1,5 +1,6 @@
-export default (req, res) => {
-  res.statusCode = 200
-  res.setHeader('Content-Type', 'application/json')
-  res.end(JSON.stringify({ name: 'John Doe' }))
+import { db, sql } from '../../src/database'
+
+export default async (req, res) => {
+  const result = await db.query(sql`select 1 + 1`)
+  res.json({ hello: result })
 }
