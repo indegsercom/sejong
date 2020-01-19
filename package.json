@@ -6,7 +6,8 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "start": "next start"
+    "start": "db-migrate up && next start",
+    "migrate": "export $(cat .env | xargs) && db-migrate"
   },
   "repository": {
     "type": "git",
