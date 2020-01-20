@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "start": "db-migrate up && next start",
+    "start": "next start",
     "migrate": "export $(cat .env | xargs) && db-migrate"
   },
   "repository": {
@@ -22,6 +22,8 @@
   "homepage": "https://github.com/indegsercom/sejong#readme",
   "dependencies": {
     "dotenv": "^8.2.0",
+    "micro-cors": "^0.1.1",
+    "nanoid": "^2.1.9",
     "react": "^16.12.0",
     "react-dom": "^16.12.0",
     "slonik": "^21.4.2"
