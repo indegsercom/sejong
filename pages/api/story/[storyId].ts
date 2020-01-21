@@ -1,28 +1,7 @@
-import cors from 'micro-cors'
-import nanoid from 'nanoid'
-import { NotFoundError } from 'slonik'
 import { db, sql } from '../../../src/database'
+import handler from '../../../src/handler'
 
-const middy = () => responder => async (req, res) => {
-  const requestId = nanoid(7)
-  try {
-    const data = await cors()(responder)(req, res)
-    res.json({ requestId, data, error: null })
-  } catch (err) {
-    if (err instanceof NotFoundError) {
-      res.statusCode = 404
-    } else {
-      res.statusCode = 400
-    }
-    res.json({
-      requestId,
-      data: null,
-      error: err.message,
-    })
-  }
-}
-
-const handler = async (req, res) => {
+const responder = async (req, res) => {
   const { storyId } = req.query
 
   switch (req.method) {
@@ -44,4 +23,4 @@ const handler = async (req, res) => {
   }
 }
 
-export default middy()(handler)
+export default handler()(responder)
