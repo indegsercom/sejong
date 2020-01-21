@@ -1,16 +1,21 @@
-import { db, sql } from '../../src/database'
 import handler from '../../src/handler'
 import { createError } from '../../src/errors'
-
-// export default async (req, res) => {
-//   const result = await db.many(sql`select * from story`)
-//   res.json({ data: result })
-// }
+import { createStory, getStories } from '../../src/services/story'
 
 const responder = async (req, res) => {
-  if (req.method !== 'POST') {
-    console.log('hello')
-    throw new createError.MethodNotAllowed()
+  switch (req.method) {
+    case 'GET': {
+      const stories = await getStories()
+      return { stories }
+    }
+    case 'POST': {
+      res.statusCode = 201
+      const story = await createStory(req.body)
+      return { story }
+    }
+    default: {
+      throw new createError.MethodNotAllowed()
+    }
   }
 }
 

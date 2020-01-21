@@ -1,5 +1,6 @@
 import { db, sql } from '../../../src/database'
 import handler from '../../../src/handler'
+import { updateStory, getStory } from '../../../src/services/story'
 
 const responder = async (req, res) => {
   const { storyId } = req.query
@@ -13,12 +14,13 @@ const responder = async (req, res) => {
 
       return { storyId }
     }
+    case 'PUT': {
+      const story = await updateStory({ id: storyId, ...req.body })
+      return { story }
+    }
     case 'GET': {
-      const story = await db.one(sql`
-        select * from story where id = ${storyId}
-      `)
-
-      return res.json({ story })
+      const story = await getStory(storyId)
+      return { story }
     }
   }
 }

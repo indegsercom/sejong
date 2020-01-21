@@ -1,20 +1,13 @@
 import nanoid from 'nanoid'
-import { db, sql } from '../database'
+import { db, sql, insert, update, findById } from '../database'
 
-export const upsertStory = async data => {
-  const { id, title, excerpt, body } = data
+export const createStory = async body => {
+  const data = { ...body, id: nanoid(7) }
+  return await insert('story', data)
+}
 
-  const result = await db.one(sql`
-    insert into story (id, title, excerpt, body) 
-    values (${id || nanoid()}, ${title}, ${excerpt}, ${body})
-    on conflict (id) do update
-      set title = excluded.title,
-          excerpt = excluded.excerpt,
-          body = excluded.body
-    returning *
-  `)
-
-  return result
+export const updateStory = async data => {
+  return await update('story', data)
 }
 
 export const deleteStory = async ({ id }) => {
@@ -27,4 +20,10 @@ export const deleteStory = async ({ id }) => {
   return { id }
 }
 
-export const getStories = () => {}
+export const getStory = storyId => findById('story', storyId)
+
+export const getStories = () => {
+  return db.many(sql`
+    select * from story
+  `)
+}
