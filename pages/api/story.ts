@@ -5,8 +5,12 @@ import { createStory, getStories } from '../../src/services/story'
 const responder = async (req, res) => {
   switch (req.method) {
     case 'GET': {
-      const stories = await getStories()
-      return { stories }
+      try {
+        const stories = await getStories()
+        return { stories }
+      } catch (err) {
+        return { stories: [] }
+      }
     }
     case 'POST': {
       res.statusCode = 201
