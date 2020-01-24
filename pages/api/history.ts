@@ -21,11 +21,11 @@ const responder = async (req, res) => {
 
 export default handler()(
   validator({
-    POST: yup =>
-      yup.object().noUnknown({
-        link: yup
+    POST: joi =>
+      joi.object({
+        link: joi
           .string()
-          .url()
+          .uri()
           .required(),
       }),
   }),

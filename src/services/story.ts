@@ -22,8 +22,13 @@ export const deleteStory = async ({ id }) => {
 
 export const getStory = storyId => findById('story', storyId)
 
-export const getStories = () => {
-  return db.many(sql`
-    select * from story
-  `)
+export const getStories = async () => {
+  try {
+    const stories = await db.many(sql`
+      select * from story
+    `)
+    return stories
+  } catch (err) {
+    return []
+  }
 }
