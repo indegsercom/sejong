@@ -3,15 +3,12 @@ import { createPool, sql as s } from 'slonik'
 export const sql = s
 
 const getConnectionUri = () => {
-  const uris = {
-    PROD: process.env.PROD_DB,
-    STAGE: process.env.STAGE_DB,
-  }
-
   return (
-    uris[process.env.MODE] || 'postgres://postgres@localhost:5432/indegsercom'
+    process.env.DATABASE_URL || 'postgres://postgres@localhost:5432/indegsercom'
   )
 }
+
+console.log(getConnectionUri(), 'conn uri')
 
 export const db = createPool(getConnectionUri(), {
   captureStackTrace: false,

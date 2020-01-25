@@ -1,5 +1,7 @@
 on:
   push:
+    branches:
+      - develop
 
 name: Migration
 jobs:
@@ -25,4 +27,12 @@ jobs:
           npm install
           ./node_modules/.bin/db-migrate up
         env:
-          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          DATABASE_URL: ${{ secrets.STAGE_DB }}
+      - name: Deploy
+        run: |
+          node scripts/create-now-json.js
+          ./node_modules/.bin/now --target production
+        env:
+          NOW_ALIAS: sejong-stage.indegser.com
+          NOW_TOKEN: ${{ secrets.NOW_TOKEN }}
+          DATABASE_URL: ${{ secrets.STAGE_DB }}
