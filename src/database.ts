@@ -8,8 +8,6 @@ const getConnectionUri = () => {
   )
 }
 
-console.log(getConnectionUri(), 'conn uri')
-
 export const db = createPool(getConnectionUri(), {
   captureStackTrace: false,
 })

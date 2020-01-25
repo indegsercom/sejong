@@ -27,7 +27,7 @@ jobs:
           npm install
           ./node_modules/.bin/db-migrate up
         env:
-          DATABASE_URL: ${{ secrets.STAGE_DB }}
+          DATABASE_URL: ${{ secrets.EDGE_DB }}
       - name: Deploy
         run: |
           node scripts/create-now-json.js
@@ -35,4 +35,4 @@ jobs:
         env:
           NOW_NAME: sejong-edge
           NOW_TOKEN: ${{ secrets.NOW_TOKEN }}
-          DATABASE_URL: ${{ secrets.STAGE_DB }}
+          DATABASE_URL: ${{ secrets.EDGE_DB }}
