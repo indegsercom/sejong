@@ -3,7 +3,7 @@ on:
     branches:
       - develop
 
-name: Migration
+name: Edge CI
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -31,7 +31,7 @@ jobs:
       - name: Deploy
         run: |
           node scripts/create-now-json.js
-          ./node_modules/.bin/now --target production
+          ./node_modules/.bin/now --target production --token $NOW_TOKEN
         env:
           NOW_ALIAS: sejong-stage.indegser.com
           NOW_TOKEN: ${{ secrets.NOW_TOKEN }}
