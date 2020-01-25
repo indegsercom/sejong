@@ -1,5 +1,6 @@
 {
   "env": {
-    "DATABASE_URL": "@database-url"
+    "STAGE_DB": "@stage-db",
+    "PROD_DB": "@prod-db"
   }
 }

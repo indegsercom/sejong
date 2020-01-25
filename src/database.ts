@@ -2,12 +2,22 @@ import { createPool, sql as s } from 'slonik'
 
 export const sql = s
 
-export const db = createPool(
-  process.env.DATABASE_URL || 'postgres://postgres@localhost:5432/indegsercom',
-  {
-    captureStackTrace: false,
+const getConnectionUri = () => {
+  const uris = {
+    PROD: process.env.PROD_DB,
+    STAGE: process.env.STAGE_DB,
   }
-)
+
+  return (
+    uris[process.env.MODE] || 'postgres://postgres@localhost:5432/indegsercom'
+  )
+}
+
+console.log(getConnectionUri(), 'URI')
+
+export const db = createPool(getConnectionUri(), {
+  captureStackTrace: false,
+})
 
 export const findById = (table, id) => {
   return db.one(sql`
