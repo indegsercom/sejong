@@ -8,6 +8,7 @@ const responder = async (req, res) => {
     case 'GET': {
       const stories = await getStories()
       res.json({ data: { stories } })
+      break
     }
     case 'POST': {
       res.statusCode = 201

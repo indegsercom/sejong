@@ -7,7 +7,7 @@ const responder = async (req, res) => {
   switch (req.method) {
     case 'GET': {
       const histories = await getHistories()
-      return res.json({ data: histories })
+      return res.json({ data: { histories } })
     }
     case 'POST': {
       const history = await createHistory(req.body)

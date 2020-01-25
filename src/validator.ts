@@ -5,7 +5,12 @@ export const validator = _schemaFn => async (req, res, next) => {
   let schema
 
   if (typeof _schemaFn !== 'function') {
-    schema = _schemaFn[req.method](joi)
+    const target = _schemaFn[req.method]
+    if (!target) {
+      return next()
+    }
+
+    schema = target(joi)
   } else {
     schema = _schemaFn(joi)
   }
