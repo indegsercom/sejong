@@ -25,13 +25,13 @@ jobs:
       - name: Migrate
         run: |
           npm install
-          ./node_modules/.bin/db-migrate up
+          npx db-migrate up
         env:
           DATABASE_URL: ${{ secrets.EDGE_DB }}
       - name: Deploy
         run: |
           node scripts/create-now-json.js
-          ./node_modules/.bin/now --prod --token $NOW_TOKEN
+          npx now --prod --token $NOW_TOKEN
         env:
           NOW_NAME: sejong-edge
           NOW_TOKEN: ${{ secrets.NOW_TOKEN }}

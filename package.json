@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "next dev -p 3030",
+    "dev": "nodemon -w dev-server.js dev-server.js",
     "build": "next build",
     "start": "next start",
     "migrate": "export $(cat .env | xargs) && db-migrate"
@@ -23,6 +23,7 @@
   "dependencies": {
     "@hapi/joi": "^17.1.0",
     "http-errors": "^1.7.3",
+    "micro-cors": "^0.1.1",
     "nanoid": "^2.1.10",
     "now": "^16.7.3",
     "open-graph-scraper": "^3.6.2",
