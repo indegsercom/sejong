@@ -1,17 +1,35 @@
 import og from 'open-graph-scraper'
+import axios from 'axios'
 import { createError } from '../errors'
 import { insert, db, sql } from '../database'
 
+const crawl = async link => {
+  try {
+    const { data: html } = await axios(link, {
+      headers: {
+        'user-agent': 'Googlebot/2.1 (+http://www.googlebot.com/bot.html)',
+      },
+    })
+
+    return html
+  } catch (err) {
+    const { data: html } = await axios(link)
+    return html
+  }
+}
+
 export const createHistory = async ({ link }) => {
-  const { data, success } = await og({
-    url: link,
-    headers: { 'user-agent': 'Googlebot' },
-  })
+  const html = await crawl(link)
+
+  const { data: openGraph, success } = await og({ html })
+
   if (!success) {
-    throw new createError.NotAcceptable(`Can not crawl provided link: ${link}`)
+    throw new createError.NotAcceptable(
+      `Cannot parse open-graph of provided link. ${link}`
+    )
   }
 
-  const { ogTitle, ogDescription, ogImage } = data
+  const { ogTitle, ogDescription, ogImage } = openGraph
   const payload = {
     link,
     title: ogTitle,
