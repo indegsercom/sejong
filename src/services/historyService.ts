@@ -2,6 +2,7 @@ import og from 'open-graph-scraper'
 import axios from 'axios'
 import { createError } from '../errors'
 import { insert, db, sql } from '../database'
+import parisApi from '../apis/parisApi'
 
 const crawl = async link => {
   try {
@@ -35,6 +36,10 @@ export const createHistory = async ({ link }) => {
     title: ogTitle,
     excerpt: ogDescription,
     cover: ogImage.url,
+  }
+
+  if (payload.cover) {
+    payload.cover = await parisApi.resize(payload.cover, { width: 180 })
   }
 
   return insert('history', payload)
