@@ -1,7 +1,7 @@
-import handler from '../../src/handler'
-import { createError } from '../../src/errors'
-import { createHistory, getHistories } from '../../src/services/historyService'
-import { validator } from '../../src/validator'
+import handler from '../src/handler'
+import { createError } from '../src/errors'
+import { createHistory, getHistories } from '../src/services/historyService'
+import { validator } from '../src/validator'
 
 const responder = async (req, res) => {
   switch (req.method) {

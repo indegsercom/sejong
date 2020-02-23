@@ -22,17 +22,17 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: 10.x
-      - name: Migrate
+      - name: Install dependencies
         run: |
           npm install
+      - name: Migrate
+        run: |
           npx db-migrate up
         env:
           DATABASE_URL: ${{ secrets.EDGE_DB }}
       - name: Deploy
         run: |
-          node scripts/create-now-json.js
-          npx now --prod --token $NOW_TOKEN
+          npx now --prod --token $NOW_TOKEN --env DATABASE_URL=$DATABASE_URL
         env:
-          NOW_NAME: sejong-edge
           NOW_TOKEN: ${{ secrets.NOW_TOKEN }}
           DATABASE_URL: ${{ secrets.EDGE_DB }}

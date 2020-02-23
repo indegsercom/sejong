@@ -1,1 +1,4 @@
-{ "env": {}, "scope": "indegsercom" }
+{
+  "scope": "indegsercom",
+  "regions": ["icn1"]
+}
