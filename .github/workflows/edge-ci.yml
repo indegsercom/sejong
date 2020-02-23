@@ -32,7 +32,7 @@ jobs:
           DATABASE_URL: ${{ secrets.EDGE_DB }}
       - name: Deploy
         run: |
-          npx now --prod --token $NOW_TOKEN --env DATABASE_URL=$DATABASE_URL --confirm
+          npx now --name sejong-edge --prod --token $NOW_TOKEN --env DATABASE_URL=$DATABASE_URL --confirm
         env:
           NOW_TOKEN: ${{ secrets.NOW_TOKEN }}
           DATABASE_URL: ${{ secrets.EDGE_DB }}
