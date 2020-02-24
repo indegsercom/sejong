@@ -48,7 +48,9 @@ export const createHistory = async ({ link }) => {
 export const getHistories = async () => {
   let histories = []
   try {
-    histories = await db.many(sql`select * from history`)
+    histories = await db.many(
+      sql`select * from history order by modified_at DESC`
+    )
   } catch (err) {}
   return histories
 }
