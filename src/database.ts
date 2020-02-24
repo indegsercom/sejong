@@ -1,4 +1,5 @@
 import { createPool, sql as s } from 'slonik'
+import { createFieldNameTransformationInterceptor } from 'slonik-interceptor-field-name-transformation'
 
 export const sql = s
 
@@ -8,8 +9,15 @@ const getConnectionUri = () => {
   )
 }
 
+const interceptors = [
+  createFieldNameTransformationInterceptor({
+    format: 'CAMEL_CASE',
+  }),
+]
+
 export const db = createPool(getConnectionUri(), {
   captureStackTrace: false,
+  interceptors,
 })
 
 export const findById = (table, id) => {
