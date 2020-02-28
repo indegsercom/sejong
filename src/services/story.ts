@@ -32,3 +32,7 @@
 //     return []
 //   }
 // }
+
+const story = {}
+
+export default story
