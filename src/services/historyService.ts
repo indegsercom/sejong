@@ -3,10 +3,20 @@ import axios from 'axios'
 import { createError } from '../errors'
 import { insert, db, sql } from '../database'
 import parisApi from '../apis/parisApi'
+import iconv from 'iconv-lite'
 
 const crawl = async link => {
   try {
+    axios.interceptors.response.use(response => {
+      let ctype = response.headers['content-type']
+      if (ctype.includes('EUC-KR')) {
+        response.data = iconv.decode(response.data, 'EUC-KR')
+      }
+      return response
+    })
+
     const { data: html } = await axios(link, {
+      responseType: 'arraybuffer',
       headers: {
         'user-agent': 'Googlebot/2.1 (+http://www.googlebot.com/bot.html)',
       },
