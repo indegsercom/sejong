@@ -1,9 +1,17 @@
 import { insert, db, sql } from '../database'
+import parisApi from '../apis/parisApi'
 
-const createBook = data => {
+const createBook = async data => {
+  let { cover } = data
+
+  if (cover) {
+    cover = await parisApi.resize(cover, { height: 480 })
+  }
+
   return insert({
     table: 'book',
     ...data,
+    cover,
   })
 }
 

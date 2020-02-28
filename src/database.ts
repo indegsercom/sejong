@@ -48,7 +48,6 @@ interface IBook {
 type TableType = IBook | IHistory
 
 export const insert = ({ table, ...data }: TableType) => {
-  console.log(table, data)
   const keys = Object.keys(data)
   const columns = sql.join(
     keys.map(k => sql.identifier([k])),
@@ -65,8 +64,6 @@ export const insert = ({ table, ...data }: TableType) => {
     }),
     sql`,`
   )
-
-  console.log(values)
 
   return db.one(sql`
     insert into ${sql.identifier([table])} (${columns}) 
