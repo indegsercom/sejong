@@ -42,7 +42,10 @@ export const createHistory = async ({ link }) => {
     payload.cover = await parisApi.resize(payload.cover, { width: 180 })
   }
 
-  return insert('history', payload)
+  return insert({
+    table: 'history',
+    ...payload,
+  })
 }
 
 export const getHistories = async () => {

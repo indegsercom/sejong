@@ -4,6 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "dev": "next dev",
+    "build": "next build",
     "migrate": "export $(cat .env | xargs) && db-migrate"
   },
   "repository": {

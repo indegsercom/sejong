@@ -27,16 +27,46 @@ export const findById = (table, id) => {
   `)
 }
 
-export const insert = (table: string, data) => {
+interface IHistory {
+  table: 'history'
+  link: string
+  title: string
+  excerpt: string
+  cover: string
+}
+
+interface IBook {
+  table: 'book'
+  title: string
+  cover: string
+  excerpt: string
+  markdown_url: string
+  authors: string[]
+  published_year: number
+}
+
+type TableType = IBook | IHistory
+
+export const insert = ({ table, ...data }: TableType) => {
+  console.log(table, data)
   const keys = Object.keys(data)
   const columns = sql.join(
     keys.map(k => sql.identifier([k])),
     sql`,`
   )
   const values = sql.join(
-    keys.map(k => data[k]),
+    keys.map(k => {
+      const value = data[k]
+      if (Array.isArray(value)) {
+        return sql.array(value, 'text')
+      }
+
+      return data[k]
+    }),
     sql`,`
   )
+
+  console.log(values)
 
   return db.one(sql`
     insert into ${sql.identifier([table])} (${columns}) 
