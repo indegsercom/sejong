@@ -1,4 +1,5 @@
 import bookService from '../../src/services/bookService'
+import handler from '../../src/handler'
 
 const responder = async (req, res) => {
   switch (req.method) {
@@ -13,4 +14,4 @@ const responder = async (req, res) => {
   }
 }
 
-export default responder
+export default handler()(responder)
