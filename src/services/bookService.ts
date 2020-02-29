@@ -8,11 +8,13 @@ const createBook = async data => {
     cover = await parisApi.resize(cover, { height: 480 })
   }
 
-  return insert({
+  const book = await insert({
     table: 'book',
     ...data,
     cover,
   })
+
+  return book
 }
 
 const getAllBooks = async () => {

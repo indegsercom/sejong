@@ -21,6 +21,7 @@
   "homepage": "https://github.com/indegsercom/sejong#readme",
   "dependencies": {
     "@hapi/joi": "^17.1.0",
+    "aws-sdk": "^2.630.0",
     "axios": "^0.19.2",
     "http-errors": "^1.7.3",
     "iconv-lite": "^0.5.1",
