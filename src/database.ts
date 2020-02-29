@@ -47,12 +47,17 @@ interface IBook {
 
 type TableType = IBook | IHistory
 
+const camelToSnakeCase = str =>
+  str.replace(/[A-Z]/g, letter => `_${letter.toLowerCase()}`)
+
 export const insert = ({ table, ...data }: TableType) => {
-  const keys = Object.keys(data)
+  const keys = Object.keys(data).filter(k => data[k] !== undefined)
+
   const columns = sql.join(
-    keys.map(k => sql.identifier([k])),
+    keys.map(k => sql.identifier([camelToSnakeCase(k)])),
     sql`,`
   )
+
   const values = sql.join(
     keys.map(k => {
       const value = data[k]

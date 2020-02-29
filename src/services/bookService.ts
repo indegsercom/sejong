@@ -19,7 +19,9 @@ const getAllBooks = async () => {
   let books = []
   try {
     books = await db.many(sql`select * from book order by modified_at DESC`)
-  } catch (err) {}
+  } catch (err) {
+    console.log(err.message, 'ERR')
+  }
 
   return books
 }
