@@ -4,6 +4,7 @@ import { createError } from '../errors'
 import { insert, db, sql } from '../database'
 import parisApi from '../apis/parisApi'
 import iconv from 'iconv-lite'
+import awsService from './awsService'
 
 const crawl = async link => {
   try {
@@ -67,3 +68,29 @@ export const getHistories = async () => {
   } catch (err) {}
   return histories
 }
+
+const remove = async (historyId: string) => {
+  const { cover } = await db.one(sql`
+    delete from history
+    where id = ${historyId}
+    returning history.cover;
+  `)
+
+  const coverSplit = cover.split('/')
+  const Key = coverSplit[coverSplit.length - 1]
+
+  await awsService.s3
+    .deleteObject({
+      Bucket: 'cdn.indegser.com',
+      Key,
+    })
+    .promise()
+
+  return { id: historyId }
+}
+
+const historyService = {
+  remove,
+}
+
+export default historyService
