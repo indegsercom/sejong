@@ -1,36 +1,58 @@
-import handler from '../../src/handler'
-import { createError } from '../../src/errors'
 import historyService, {
   createHistory,
   getHistories,
 } from '../../src/services/historyService'
-import { validator } from '../../src/validator'
+import { gql, ApolloServer } from 'apollo-server-micro'
+import { nodeTypeDefs } from 'graphql/typeDefs'
+import { db, sql } from 'database'
+import Cors from 'micro-cors'
 
-const responder = async (req, res) => {
-  switch (req.method) {
-    case 'GET': {
-      const histories = await getHistories()
-      return res.json({ data: { histories } })
-    }
-    case 'POST': {
-      const history = await createHistory(req.body)
-      return res.json({ data: { history } })
-    }
-    default: {
-      throw new createError.MethodNotAllowed()
-    }
+const typeDefs = gql`
+  type Query {
+    getHistories: [History]
   }
+
+  type Mutation {
+    createHistory(link: String!): History
+    deleteHistory(id: ID!): Boolean
+  }
+
+  type History {
+    ${nodeTypeDefs}
+    title: String!
+    excerpt: String!
+    link: String!
+    cover: String
+  }
+`
+
+const resolvers = {
+  Query: {
+    getHistories: () => db.many(sql`select * from history`),
+  },
+  Mutation: {
+    createHistory: (_, { link }) => historyService.createHistory({ link }),
+    deleteHistory: (_, { id }) => historyService.removeHistory(id),
+  },
 }
 
-export default handler()(
-  validator({
-    POST: joi =>
-      joi.object({
-        link: joi
-          .string()
-          .uri()
-          .required(),
-      }),
-  }),
-  responder
-)
+const apolloServer = new ApolloServer({
+  typeDefs,
+  resolvers,
+})
+
+export const config = {
+  api: {
+    bodyParser: false,
+  },
+}
+
+const cors = Cors({
+  allowMethods: ['POST', 'OPTIONS'],
+})
+
+const handler = apolloServer.createHandler({
+  path: '/api/history',
+})
+
+export default cors(handler)

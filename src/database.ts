@@ -1,5 +1,6 @@
 import { createPool, sql as s } from 'slonik'
 import { createFieldNameTransformationInterceptor } from 'slonik-interceptor-field-name-transformation'
+import { TableTypes } from 'db/tableTypes'
 
 export const sql = s
 
@@ -27,30 +28,10 @@ export const findById = (table, id) => {
   `)
 }
 
-interface IHistory {
-  table: 'history'
-  link: string
-  title: string
-  excerpt: string
-  cover: string
-}
-
-interface IBook {
-  table: 'book'
-  title: string
-  cover: string
-  excerpt: string
-  markdown_url: string
-  authors: string[]
-  published_year: number
-}
-
-type TableType = IBook | IHistory
-
 const camelToSnakeCase = str =>
   str.replace(/[A-Z]/g, letter => `_${letter.toLowerCase()}`)
 
-export const insert = ({ table, ...data }: TableType) => {
+export const insert = ({ table, ...data }: TableTypes) => {
   const keys = Object.keys(data).filter(k => data[k] !== undefined)
 
   const columns = sql.join(

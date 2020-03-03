@@ -69,7 +69,7 @@ export const getHistories = async () => {
   return histories
 }
 
-const remove = async (historyId: string) => {
+const removeHistory = async (historyId: string) => {
   const { cover } = await db.one(sql`
     delete from history
     where id = ${historyId}
@@ -86,11 +86,12 @@ const remove = async (historyId: string) => {
     })
     .promise()
 
-  return { id: historyId }
+  return true
 }
 
 const historyService = {
-  remove,
+  createHistory,
+  removeHistory,
 }
 
 export default historyService
