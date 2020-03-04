@@ -31,7 +31,10 @@ export const findById = (table, id) => {
 const camelToSnakeCase = str =>
   str.replace(/[A-Z]/g, letter => `_${letter.toLowerCase()}`)
 
-export const insert = ({ table, ...data }: TableTypes) => {
+export const insert = ({
+  table,
+  ...data
+}: Omit<TableTypes, 'id' | 'createdAt' | 'modifiedAt'>) => {
   const keys = Object.keys(data).filter(k => data[k] !== undefined)
 
   const columns = sql.join(
