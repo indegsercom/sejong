@@ -1,8 +1,8 @@
 import historyService from '../../src/services/historyService'
-import { gql, ApolloServer } from 'apollo-server-micro'
+import { gql } from 'apollo-server-micro'
 import { nodeTypeDefs } from 'graphql/typeDefs'
 import { db, sql } from 'database'
-import Cors from 'micro-cors'
+import { createApolloServer, apolloServerConfig } from 'handler'
 
 const typeDefs = gql`
   type Query {
@@ -33,23 +33,9 @@ const resolvers = {
   },
 }
 
-const apolloServer = new ApolloServer({
+export const config = apolloServerConfig
+
+export default createApolloServer('/api/history', {
   typeDefs,
   resolvers,
 })
-
-export const config = {
-  api: {
-    bodyParser: false,
-  },
-}
-
-const cors = Cors({
-  allowMethods: ['POST', 'OPTIONS'],
-})
-
-const handler = apolloServer.createHandler({
-  path: '/api/history',
-})
-
-export default cors(handler)
