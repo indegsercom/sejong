@@ -1,7 +1,4 @@
-import historyService, {
-  createHistory,
-  getHistories,
-} from '../../src/services/historyService'
+import historyService from '../../src/services/historyService'
 import { gql, ApolloServer } from 'apollo-server-micro'
 import { nodeTypeDefs } from 'graphql/typeDefs'
 import { db, sql } from 'database'
