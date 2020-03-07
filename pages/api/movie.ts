@@ -1,7 +1,7 @@
-import { ApolloServer, gql } from 'apollo-server-micro'
-import Cors from 'micro-cors'
+import { gql } from 'apollo-server-micro'
 import { db, sql } from 'database'
 import movieService from 'services/movieService'
+import { createApolloServer, apolloServerConfig } from 'handler'
 
 const typeDefs = gql`
   type Query {
@@ -52,24 +52,9 @@ const resolvers = {
   },
 }
 
-const apolloServer = new ApolloServer({
+export const config = apolloServerConfig
+
+export default createApolloServer('/api/movie', {
   typeDefs,
   resolvers,
-  context: () => {
-    return {}
-  },
 })
-
-const handler = apolloServer.createHandler({ path: '/api/movie' })
-
-export const config = {
-  api: {
-    bodyParser: false,
-  },
-}
-
-const cors = Cors({
-  allowMethods: ['POST', 'OPTIONS'],
-})
-
-export default cors(handler)

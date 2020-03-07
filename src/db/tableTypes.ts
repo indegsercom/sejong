@@ -12,7 +12,7 @@ export type HistoryTable = Node & {
   cover: string
 }
 
-export type BookTable = Node & {
+export interface BookTable extends Node {
   table: 'book'
   title: string
   cover: string
