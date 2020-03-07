@@ -1,5 +1,5 @@
 import bookService from 'services/bookService'
-import { createApolloServer } from 'handler'
+import { createApolloServer, apolloServerConfig } from 'handler'
 import { gql } from 'apollo-server-micro'
 import { nodeTypeDefs } from 'graphql/typeDefs'
 import { BookTable } from 'db/tableTypes'
@@ -24,7 +24,7 @@ const typeDefs = gql`
   }
 
   type Mutation {
-    createBook(book: CreateBook): Book
+    createBook(book: CreateBookInput): Book
   }
 `
 
@@ -47,7 +47,9 @@ const resolvers = {
   },
 }
 
-export default createApolloServer('api/book', {
+export const config = apolloServerConfig
+
+export default createApolloServer('/api/book', {
   typeDefs,
   resolvers,
 })
