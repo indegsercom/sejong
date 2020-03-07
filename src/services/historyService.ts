@@ -30,7 +30,7 @@ const crawl = async link => {
   }
 }
 
-export const createHistory = async ({ link }) => {
+export const createHistory = async ({ link, comment }) => {
   const html = await crawl(link)
 
   const { data: openGraph, success } = await og({ html })
@@ -44,13 +44,20 @@ export const createHistory = async ({ link }) => {
   const { ogTitle, ogDescription, ogImage } = openGraph
   const payload = {
     link,
+    comment,
     title: ogTitle,
     excerpt: ogDescription,
     cover: ogImage.url,
   }
 
   if (payload.cover) {
-    payload.cover = await parisApi.resize(payload.cover, { width: 180 })
+    let url = payload.cover
+    if (url.slice(0, 1) === '/') {
+      // it is relative url to origin
+      url = new URL(link).origin + url
+    }
+
+    payload.cover = await parisApi.resize(url, { width: 180 })
   }
 
   return insert({
@@ -59,7 +66,7 @@ export const createHistory = async ({ link }) => {
   })
 }
 
-export const getHistories = async () => {
+const getHistories = async () => {
   let histories = []
   try {
     histories = await db.many(
@@ -69,7 +76,9 @@ export const getHistories = async () => {
   return histories
 }
 
-const removeHistory = async (historyId: string) => {
+const updateHistory = async ({ input }) => {}
+
+const deleteHistory = async (historyId: string) => {
   const { cover } = await db.one(sql`
     delete from history
     where id = ${historyId}
@@ -90,8 +99,10 @@ const removeHistory = async (historyId: string) => {
 }
 
 const historyService = {
+  getHistories,
   createHistory,
-  removeHistory,
+  updateHistory,
+  deleteHistory,
 }
 
 export default historyService

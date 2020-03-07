@@ -9,12 +9,17 @@ interface ResizeOptions {
 
 const parisApi = {
   resize: async (url, options: ResizeOptions) => {
-    const { data } = await axios.post(baseUrl + '/api/resize', {
-      image: url,
-      ...options,
-    })
+    try {
+      const { data } = await axios.post(baseUrl + '/api/resize', {
+        image: url,
+        ...options,
+      })
 
-    return data.location
+      return data.location
+    } catch (err) {
+      console.log(err.message)
+      return null
+    }
   },
 }
 

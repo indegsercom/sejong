@@ -9,8 +9,13 @@ const typeDefs = gql`
     getHistories: [History]
   }
 
+  input CreateHistoryInput {
+    link: String!
+    comment: String
+  }
+
   type Mutation {
-    createHistory(link: String!): History
+    createHistory(input: CreateHistoryInput): History
     deleteHistory(id: ID!): Boolean
   }
 
@@ -20,16 +25,17 @@ const typeDefs = gql`
     excerpt: String!
     link: String!
     cover: String
+    comment: String
   }
 `
 
 const resolvers = {
   Query: {
-    getHistories: () => db.many(sql`select * from history`),
+    getHistories: () => historyService.getHistories(),
   },
   Mutation: {
-    createHistory: (_, { link }) => historyService.createHistory({ link }),
-    deleteHistory: (_, { id }) => historyService.removeHistory(id),
+    createHistory: (_, { input }) => historyService.createHistory(input),
+    deleteHistory: (_, { id }) => historyService.deleteHistory(id),
   },
 }
 
