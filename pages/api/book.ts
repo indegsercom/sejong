@@ -1,6 +1,6 @@
 import bookService from 'services/bookService'
 import { createApolloServer, apolloServerConfig } from 'handler'
-import { gql } from 'apollo-server-micro'
+import { gql, ValidationError } from 'apollo-server-micro'
 import { nodeTypeDefs } from 'graphql/typeDefs'
 import { BookTable } from 'db/tableTypes'
 
@@ -17,10 +17,10 @@ const typeDefs = gql`
   }
 
   input CreateBookInput {
-    title: String
+    title: String!
     cover: String
-    authors: [String]
-    publishedYear: Int
+    authors: [String!]!
+    publishedYear: Int!
   }
 
   type Mutation {
@@ -34,6 +34,9 @@ const resolvers = {
   },
   Mutation: {
     createBook: (_, { book }: { book: BookTable }) => {
+      if (book.authors.length === 0) {
+        throw new ValidationError('`book.authors` should not be empty array')
+      }
       return bookService.create({
         table: 'book',
         ...book,
@@ -42,7 +45,8 @@ const resolvers = {
   },
   Book: {
     citation: (book: BookTable) => {
-      return `${book.authors.join(', ')} (${book.publishedYear})}`
+      if (book.authors.length === 0) return `(${book.publishedYear})`
+      return `${book.authors.join(', ')} (${book.publishedYear})`
     },
   },
 }

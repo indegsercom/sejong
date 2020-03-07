@@ -24,7 +24,7 @@ export const createApolloServer = (path: string, config: Config) => {
       return res.status(200).end()
     }
 
-    apolloHandler(req, res)
+    return apolloHandler(req, res)
   }
 
   return cors(handler)
