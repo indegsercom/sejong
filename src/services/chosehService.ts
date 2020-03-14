@@ -1,34 +1,31 @@
 import AWS from 'aws-sdk'
 import awsService from './awsService'
 
-export const upload = (
-  config: Pick<AWS.S3.PutObjectRequest, 'Key' | 'ContentType' | 'Body'>
+const upload = (
+  config: Pick<AWS.S3.PutObjectRequest, 'ACL' | 'Key' | 'Bucket' | 'Body'>
 ) => {
   return awsService.s3
     .upload({
-      ...config,
-      ACL: 'public-read',
       Bucket: 'cdn.indegser.com',
+      ACL: 'public-read',
+      ContentType: 'text/markdown; charset=UTF-8',
       CacheControl: 'max-age=31556952', // one year
+      ...config,
     })
     .promise()
 }
 
-const create = (id: string, body: string) => {
-  const Key = `choseh/${id}.md`
-
+const write = ({ id, content }) => {
+  const Key = id + '.md'
   return upload({
     Key,
-    Body: body,
-    ContentType: 'text/markdown; charset=UTF-8',
+    Bucket: 'choseh',
+    Body: content,
   })
 }
 
-const update = () => {}
-
 const chosehService = {
-  create,
-  update,
+  write,
 }
 
 export default chosehService

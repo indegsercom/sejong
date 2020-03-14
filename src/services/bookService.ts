@@ -32,7 +32,12 @@ const updateBook = () => {}
 
 const removeBook = () => {}
 
+const findById = (id: string) => {
+  return db.one(sql`select * from book where id = ${id}`)
+}
+
 const bookService = {
+  findById,
   getAll: getAllBooks,
   create: createBook,
   update: updateBook,

@@ -1,11 +1,13 @@
 import bookService from 'services/bookService'
 import { createApolloServer, apolloServerConfig } from 'handler'
 import { gql, ValidationError } from 'apollo-server-micro'
-import { nodeTypeDefs } from 'graphql/typeDefs'
+import { nodeTypeDefs, chosehTypeDefs } from 'graphql/typeDefs'
 import { BookTable } from 'db/tableTypes'
+import chosehService from 'services/chosehService'
 
 const typeDefs = gql`
   type Query {
+    getBook(id: ID!): Book
     getBooks: [Book]
   }
 
@@ -30,6 +32,7 @@ const typeDefs = gql`
 
 const resolvers = {
   Query: {
+    getBook: (_, { id }) => bookService.findById(id),
     getBooks: () => bookService.getAll(),
   },
   Mutation: {
