@@ -37,4 +37,6 @@ const resolvers = {
 export default createApolloServer('/api/choseh', {
   typeDefs,
   resolvers,
+  introspection: true,
+  playground: true,
 })
