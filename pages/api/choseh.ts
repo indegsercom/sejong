@@ -34,6 +34,7 @@ const resolvers = {
   },
 }
 
+// TODO. turn off on production build.
 export default createApolloServer('/api/choseh', {
   typeDefs,
   resolvers,
