@@ -18,12 +18,17 @@ const upload = (
 
 const get = async ({ id }) => {
   const Key = id + '.md'
+  let edition: number
 
   try {
-    const { edition } = await db.one(sql`
+    ;({ edition } = await db.one(sql`
       select * from choseh where id = ${id}
-    `)
+    `))
+  } catch (err) {
+    edition = 0
+  }
 
+  try {
     const data = await awsService.s3
       .getObject({
         Key,
@@ -33,6 +38,7 @@ const get = async ({ id }) => {
 
     const modifiedAt = new Date(data.LastModified).getTime()
     const content = data.Body.toString()
+
     return {
       modifiedAt,
       edition,
@@ -41,8 +47,8 @@ const get = async ({ id }) => {
   } catch (err) {
     return {
       content: '',
-      edition: 0,
-      modifiedAt: 0,
+      edition,
+      modifiedAt: new Date().getTime(),
     }
   }
 }
