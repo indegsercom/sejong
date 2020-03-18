@@ -30,4 +30,10 @@ export type MovieTable = Node & {
   trailerUrl?: string
 }
 
-export type TableTypes = HistoryTable | BookTable | MovieTable
+export type ChosehTable = {
+  table: 'choseh'
+  id: string
+  edit: number
+}
+
+export type TableTypes = HistoryTable | BookTable | MovieTable | ChosehTable

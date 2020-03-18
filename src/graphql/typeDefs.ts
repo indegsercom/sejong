@@ -6,6 +6,8 @@ export const nodeTypeDefs = `
 
 export const chosehTypeDefs = `
   type Choseh {
-    eTag: String!
+    edition: Int!
+    content: String!
+    modifiedAt: Float!
   }
 `

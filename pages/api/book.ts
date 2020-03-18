@@ -11,8 +11,11 @@ const typeDefs = gql`
     getBooks: [Book]
   }
 
+  ${chosehTypeDefs}
+
   type Book {
     ${nodeTypeDefs}
+    choseh: Choseh
     title: String
     cover: String
     citation: String
@@ -47,6 +50,10 @@ const resolvers = {
     },
   },
   Book: {
+    choseh: (book: BookTable) => {
+      const chosehId = book.id
+      return chosehService.get({ id: chosehId })
+    },
     citation: (book: BookTable) => {
       if (book.authors.length === 0) return `(${book.publishedYear})`
       return `${book.authors.join(', ')} (${book.publishedYear})`

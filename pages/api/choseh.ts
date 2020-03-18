@@ -18,7 +18,7 @@ const typeDefs = gql`
   }
 
   type Mutation {
-    write(input: Write!): Choseh
+    write(input: Write!): Boolean
   }
 `
 
@@ -28,8 +28,7 @@ const resolvers = {
   },
   Mutation: {
     write: async (_, { input }) => {
-      const res = await chosehService.write(input)
-      return { eTag: res.ETag.replace(/"/g, '') }
+      return chosehService.write(input)
     },
   },
 }
