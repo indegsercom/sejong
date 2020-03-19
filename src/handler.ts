@@ -25,7 +25,11 @@ export const createApolloServer = (path: string, config: Config) => {
         return {
           isAdmin: result.role === 'admin',
         }
-      } catch (err) {}
+      } catch (err) {
+        if (!process.env.JWT_SECRET) {
+          console.warn('JWT empty')
+        }
+      }
     },
     ...config,
   })
