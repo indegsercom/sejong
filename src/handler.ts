@@ -13,7 +13,11 @@ const cors = Cors({
 })
 
 export const createApolloServer = (path: string, config: Config) => {
-  const apolloServer = new ApolloServer(config)
+  const apolloServer = new ApolloServer({
+    playground: true,
+    introspection: true,
+    ...config,
+  })
 
   const apolloHandler = apolloServer.createHandler({
     path,
