@@ -1,8 +1,9 @@
 import historyService from '../../src/services/historyService'
 import { gql } from 'apollo-server-micro'
 import { nodeTypeDefs } from 'graphql/typeDefs'
-import { db, sql } from 'database'
 import { createApolloServer, apolloServerConfig } from 'handler'
+import isAuthenticated from 'graphql/resolvers/isAuthenticated'
+import combine from 'graphql/resolvers/combine'
 
 const typeDefs = gql`
   type Query {
@@ -34,8 +35,12 @@ const resolvers = {
     getHistories: () => historyService.getHistories(),
   },
   Mutation: {
-    createHistory: (_, { input }) => historyService.createHistory(input),
-    deleteHistory: (_, { id }) => historyService.deleteHistory(id),
+    createHistory: combine(isAuthenticated, (_, { input }) =>
+      historyService.createHistory(input)
+    ),
+    deleteHistory: combine(isAuthenticated, (_, { id }) =>
+      historyService.deleteHistory(id)
+    ),
   },
 }
 

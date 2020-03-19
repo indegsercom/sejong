@@ -1,4 +1,5 @@
 import Cors from 'micro-cors'
+import jwt from 'jsonwebtoken'
 import { Config, ApolloServer } from 'apollo-server-micro'
 import { NextApiResponse } from 'next'
 
@@ -16,6 +17,16 @@ export const createApolloServer = (path: string, config: Config) => {
   const apolloServer = new ApolloServer({
     playground: true,
     introspection: true,
+    context: ({ req }) => {
+      const token = req.headers.authorization
+
+      try {
+        const result: any = jwt.verify(token, process.env.JWT_SECRET)
+        return {
+          isAdmin: result.role === 'admin',
+        }
+      } catch (err) {}
+    },
     ...config,
   })
 

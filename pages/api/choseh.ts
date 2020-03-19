@@ -2,6 +2,8 @@ import { apolloServerConfig, createApolloServer } from 'handler'
 import { gql } from 'apollo-server-micro'
 import { chosehTypeDefs } from 'graphql/typeDefs'
 import chosehService from 'services/chosehService'
+import combine from 'graphql/resolvers/combine'
+import isAuthenticated from 'graphql/resolvers/isAuthenticated'
 
 export const config = apolloServerConfig
 
@@ -9,7 +11,7 @@ const typeDefs = gql`
   ${chosehTypeDefs}
 
   type Query {
-    hello: String
+    hello: String!
   }
 
   input Write {
@@ -24,12 +26,12 @@ const typeDefs = gql`
 
 const resolvers = {
   Query: {
-    hello: () => 'string',
+    hello: () => 'World!',
   },
   Mutation: {
-    write: async (_, { input }) => {
+    write: combine(isAuthenticated, async (_, { input }) => {
       return chosehService.write(input)
-    },
+    }),
   },
 }
 
