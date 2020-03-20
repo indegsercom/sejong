@@ -32,9 +32,11 @@ jobs:
           DATABASE_URL: ${{ secrets.PROD_DB }}
       - name: Deploy
         run: |
-          npx now --prod --token $NOW_TOKEN --env DATABASE_URL=$DATABASE_URL --confirm
+          npx now --prod --token $NOW_TOKEN --env DATABASE_URL=$DATABASE_URL -e AWS_ID=$AWS_ID -e AWS_SECRET=$AWS_SECRET --confirm
         env:
           NOW_TOKEN: ${{ secrets.NOW_TOKEN }}
           DATABASE_URL: ${{ secrets.PROD_DB }}
           NOW_ORG_ID: team_AAkK6ALVj9oOHZ6WuFS1i56y
           NOW_PROJECT_ID: ${{ secrets.PROD_PROJECT_ID }}
+          AWS_ID: ${{ secrets.AWS_ID }}
+          AWS_SECRET: ${{ secrets.AWS_SECRET }}
