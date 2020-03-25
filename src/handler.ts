@@ -39,6 +39,7 @@ export const createApolloServer = (path: string, config: Config) => {
   })
 
   const handler = (req, res: NextApiResponse) => {
+    res.setHeader('cache-control', 's-maxage=1, stale-while-revalidate')
     if (req.method === 'OPTIONS') {
       return res.status(200).end()
     }
