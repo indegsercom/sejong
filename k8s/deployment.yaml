@@ -1,0 +1,20 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: sejong
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      name: sejong
+  template:
+    metadata:
+      labels:
+        name: sejong
+    spec:
+      containers:
+        - name: sejong
+          image: indegser/sejong
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 3000
