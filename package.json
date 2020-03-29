@@ -6,6 +6,7 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
+    "start": "next start",
     "migrate": "export $(cat .env | xargs) && db-migrate"
   },
   "repository": {
@@ -30,7 +31,7 @@
     "jsonwebtoken": "^8.5.1",
     "micro-cors": "^0.1.1",
     "nanoid": "^2.1.10",
-    "next": "^9.2.2",
+    "next": "^9.3.2",
     "open-graph-scraper": "^3.6.2",
     "parse-favicon": "^2.0.0",
     "react": "^16.12.0",
