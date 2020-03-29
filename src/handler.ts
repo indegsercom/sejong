@@ -44,6 +44,10 @@ export const createApolloServer = (path: string, config: Config) => {
       return res.status(200).end()
     }
 
+    if (req.url === '/') {
+      return res.status(200).end()
+    }
+
     return apolloHandler(req, res)
   }
 
