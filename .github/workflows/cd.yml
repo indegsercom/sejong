@@ -36,10 +36,14 @@ jobs:
           docker push $IMAGE
       - name: Secret
         run: |
-          ./secret-gen.sh
+          ./deploy/update-secret.sh
+        env:
+          JWT_SECRET: ${{ secrets.JWT_SECRET }}
+          AWS_ID: ${{ secrets.AWS_ID }}
+          AWS_SECRET: ${{ secrets.AWS_SECRET }}
       - name: Deploy
         run: |
           gcloud container clusters get-credentials $CLUSTER --zone asia-northeast3-a
-          ./gke/update-tag.sh
+          ./deploy/update-tag.sh
           kubectl apply -k ./deploy
           kubectl get services -o wide

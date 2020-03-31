@@ -2,21 +2,22 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: sejong
-  labels:
-    app: sejong
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: sejong
+      name: sejong
   template:
     metadata:
       labels:
-        app: sejong
+        name: sejong
     spec:
       containers:
         - name: sejong
-          image: indegser/sejong
-          imagePullPolicy: Always
+          image: gcr.io/indegser/sejong
+          imagePullPolicy: IfNotPresent
+          envFrom:
+            - secretRef:
+              name: indegser-secret
           ports:
             - containerPort: 3000
