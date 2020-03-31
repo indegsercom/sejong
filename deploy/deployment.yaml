@@ -14,7 +14,10 @@ spec:
     spec:
       containers:
         - name: sejong
-          image: indegser/sejong
-          imagePullPolicy: Always
+          image: gcr.io/indegser/sejong
+          imagePullPolicy: IfNotPresent
+          envFrom:
+            - secretRef:
+                name: indegser-secret
           ports:
             - containerPort: 3000
