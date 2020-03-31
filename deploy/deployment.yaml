@@ -18,6 +18,6 @@ spec:
           imagePullPolicy: IfNotPresent
           envFrom:
             - secretRef:
-              name: indegser-secret
+                name: indegser-secret
           ports:
             - containerPort: 3000
