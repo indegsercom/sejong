@@ -36,6 +36,7 @@ jobs:
           docker push $IMAGE
       - name: Secret
         run: |
+          gcloud container clusters get-credentials $CLUSTER --zone asia-northeast3-a
           ./deploy/update-secret.sh
         env:
           JWT_SECRET: ${{ secrets.JWT_SECRET }}
@@ -43,7 +44,6 @@ jobs:
           AWS_SECRET: ${{ secrets.AWS_SECRET }}
       - name: Deploy
         run: |
-          gcloud container clusters get-credentials $CLUSTER --zone asia-northeast3-a
           ./deploy/update-tag.sh
           kubectl apply -k ./deploy
           kubectl get services -o wide
