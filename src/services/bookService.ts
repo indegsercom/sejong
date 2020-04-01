@@ -18,12 +18,15 @@ const createBook = async data => {
 }
 
 const getAllBooks = async () => {
+  console.time('getBook')
   let books = []
   try {
     books = await db.many(sql`select * from book order by modified_at DESC`)
   } catch (err) {
     console.log(err.message, 'ERR')
   }
+
+  console.timeEnd('getBook')
 
   return books
 }
