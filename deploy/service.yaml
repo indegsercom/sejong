@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: lb
+  name: sejong-port
 spec:
   ports:
     - port: 80
@@ -9,4 +9,4 @@ spec:
       protocol: TCP
   selector:
     name: sejong
-  type: LoadBalancer
+  type: NodePort
