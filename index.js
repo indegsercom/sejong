@@ -7,10 +7,16 @@ const { createPool, sql } = require('slonik')
 const pool = createPool(process.env.DATABASE_URL)
 
 app.get('/', async (req, res) => {
-  const result = await pool.many(
-    sql`select * from book order by modified_at DESC`
-  )
+  console.time('conn')
+  const result = await pool.connect(async conn => {
+    console.timeEnd('conn')
+    console.time('query')
+    return conn.many(sql`select * from book order by modified_at DESC`)
+  })
+  console.timeEnd('query')
+  console.time('json')
   res.json(result)
+  console.timeEnd('json')
 })
 
 // Listen to the App Engine-specified port, or 8080 otherwise
