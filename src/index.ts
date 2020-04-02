@@ -1,23 +1,10 @@
 import micro from 'micro'
-import { ApolloServer, gql } from 'apollo-server-micro'
-
-const typeDefs = gql`
-  type Query {
-    sayHello: String
-  }
-`
-
-const resolvers = {
-  Query: {
-    sayHello() {
-      return 'Hello world'
-    },
-  },
-}
+import { ApolloServer } from 'apollo-server-micro'
+import historyService from './services/history'
 
 const server = new ApolloServer({
-  typeDefs,
-  resolvers,
+  typeDefs: [historyService.typeDefs],
+  resolvers: [historyService.resolvers],
   playground: true,
   // introspection: true,
 })
