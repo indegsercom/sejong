@@ -28,6 +28,7 @@
     "iconv-lite": "^0.5.1",
     "jsonwebtoken": "^8.5.1",
     "micro": "^9.3.4",
+    "mongodb": "^3.5.5",
     "open-graph-scraper": "^3.6.2",
     "parse-favicon": "^2.0.0"
   },
@@ -35,6 +36,7 @@
     "@types/http-errors": "^1.6.3",
     "@types/jsonwebtoken": "^8.3.8",
     "@types/micro": "^7.3.3",
+    "@types/mongodb": "^3.5.4",
     "@types/node": "^13.1.7",
     "@zeit/ncc": "^0.22.0",
     "tsc-watch": "^4.2.3",

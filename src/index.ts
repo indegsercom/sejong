@@ -1,6 +1,7 @@
 import micro from 'micro'
 import { ApolloServer } from 'apollo-server-micro'
 import historyService from './services/history'
+import { createPool } from './db/db'
 
 const server = new ApolloServer({
   typeDefs: [historyService.typeDefs],
@@ -11,6 +12,8 @@ const server = new ApolloServer({
 
 const PORT = process.env.PORT || 3000
 
-micro(server.createHandler()).listen(PORT, () =>
-  console.log(`Micro on port: ${PORT}`)
-)
+createPool(() => {
+  micro(server.createHandler()).listen(PORT, () =>
+    console.log(`Micro on port: ${PORT}`)
+  )
+})
