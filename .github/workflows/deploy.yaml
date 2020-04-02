@@ -9,40 +9,20 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
-        uses: actions/checkout@v1
-
-      - name: Cache node modules
-        uses: actions/cache@v1
-        env:
-          cache-name: cache-node-modules
-        with:
-          path: ~/.npm # npm cache files are stored in `~/.npm` on Linux/macOS
-          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json') }}
-          restore-keys: |
-            ${{ runner.os }}-build-${{ env.cache-name }}-
-            ${{ runner.os }}-build-
-            ${{ runner.os }}-
-
       - name: Set edge env
         if: endsWith(github.ref, '/develop')
         run: |
-          echo "::set-env name=PROJECT::indegser-edge"
-          echo "::set-env name=PUBLISH_PROFILE::${{ secrets.EDGE_PUBLISH_PROFILE }}"
+          echo "::set-env name=PROJECT::sejong-edge"
       - name: Set prod env
         if: endsWith(github.ref, '/master')
         run: |
-          echo "::set-env name=PROJECT::indegser-prod"
-          echo "::set-env name=PUBLISH_PROFILE::${{ secrets.PROD_PUBLISH_PROFILE }}"
-      - name: Setup Node 10.x
-        uses: actions/setup-node@v1
-        with:
-          node-version: '10.x'
-      - name: Install and build
-        run: |
-          npm install
+          echo "::set-env name=PROJECT::sejong-prod"
+      - name: Checkout
+        uses: actions/checkout@v1
       - name: Deploy
-        uses: azure/webapps-deploy@v2
+        uses: docker/build-push-action@v1
         with:
-          app-name: ${{ env.PROJECT }}
-          publish-profile: ${{ secrets.EDGE_PUBLISH_PROFILE }}
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+          repository: indegser/$PROJECT
+          tags: latest
