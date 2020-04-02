@@ -4,7 +4,9 @@ const express = require('express')
 const app = express()
 const { createPool, sql } = require('slonik')
 
-const pool = createPool(process.env.DATABASE_URL)
+const pool = createPool(
+  'postgres://indegser:designer@indegsercom-edge.c7ctzhzv28ew.ap-northeast-2.rds.amazonaws.com/indegsercom'
+)
 console.log(pool.getPoolState())
 
 app.get('/', async (req, res) => {
