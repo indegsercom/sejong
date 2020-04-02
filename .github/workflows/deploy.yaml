@@ -32,4 +32,4 @@ jobs:
         uses: azure/webapps-deploy@v2
         with:
           app-name: ${{ env.PROJECT }}
-          publish-profile: ${{ env.PUBLISH_PROFILE }}
+          publish-profile: ${{ secrets.EDGE_PUBLISH_PROFILE }}
