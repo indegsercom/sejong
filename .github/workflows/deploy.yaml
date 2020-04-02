@@ -41,7 +41,6 @@ jobs:
       - name: Install and build
         run: |
           npm install
-          npm run build --if-present
       - name: Deploy
         uses: azure/webapps-deploy@v2
         with:
