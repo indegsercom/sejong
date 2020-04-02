@@ -2,11 +2,10 @@
   "name": "sejong",
   "version": "1.0.0",
   "description": "",
-  "main": "build/index.js",
   "scripts": {
     "dev": "tsc-watch --onSuccess 'npm start'",
-    "build": "ncc build src/index.ts -o build",
-    "start": "micro"
+    "build": "rm -rf build; ncc build src/index.ts -o build",
+    "start": "node build/index.js"
   },
   "repository": {
     "type": "git",
@@ -24,7 +23,6 @@
     "aws-sdk": "^2.630.0",
     "axios": "^0.19.2",
     "dotenv": "^8.2.0",
-    "fs-router": "^0.5.0",
     "graphql-resolvers": "^0.4.2",
     "http-errors": "^1.7.3",
     "iconv-lite": "^0.5.1",
