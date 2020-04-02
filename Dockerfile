@@ -1,13 +1,11 @@
 FROM node:alpine
 WORKDIR /usr/src/app
 
+RUN npm i micro
 COPY package*.json ./
-RUN npm install
 
-
-COPY . .
+COPY build build
 
 EXPOSE 3000
 
-RUN npm run build
 CMD ["npm", "start"]
