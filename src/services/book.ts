@@ -1,12 +1,14 @@
 import { gql } from 'apollo-server-micro'
-import { findAll, deleteById } from '../db/queryHelper'
+import { findAll, deleteById, findOne } from '../db/queryHelper'
 import combine from '../graphql/helpers/combine'
 import isAuthenticated from '../graphql/helpers/isAuthenticated'
 import { nodeTypeDefs } from '../graphql/typeDefs'
+import choseh from '../utils/choseh'
 
 const typeDefs = gql`
   extend type Query {
-    books: [Book]
+    getBook: Book
+    getBooks: [Book]
   }
 
   input CreateBookInput {
@@ -24,18 +26,30 @@ const typeDefs = gql`
     excerpt: String!
     link: String!
     cover: String
+    citation: String
     comment: String
+    choseh: Choseh
     ${nodeTypeDefs}
   }
 `
 
 const resolvers = {
   Query: {
-    books: () => findAll('book'),
+    getBook: (_, { id }) => findOne('book', id),
+    getBooks: () => findAll('book'),
   },
   Mutation: {
     createBook: combine(isAuthenticated, (_, { input }) => null),
     deleteBook: combine(isAuthenticated, (_, { id }) => deleteById('book', id)),
+  },
+  Book: {
+    choseh: ({ id }) => {
+      return choseh.get({ id })
+    },
+    citation: (book) => {
+      if (book.authors.length === 0) return `(${book.publishedYear})`
+      return `${book.authors.join(', ')} (${book.publishedYear})`
+    },
   },
 }
 

@@ -1,7 +1,10 @@
 import { gql } from 'apollo-server-micro'
-import { findAll, deleteById } from '../db/queryHelper'
+import { findAll, deleteById, insertOne } from '../db/queryHelper'
 import combine from '../graphql/helpers/combine'
 import isAuthenticated from '../graphql/helpers/isAuthenticated'
+import crawlOpenGraph from './history/crawlOpenGraph'
+import resizeCover from './history/resizeCover'
+import { nodeTypeDefs } from '../graphql/typeDefs'
 
 const typeDefs = gql`
   type Query {
@@ -24,6 +27,7 @@ const typeDefs = gql`
     link: String!
     cover: String
     comment: String
+    ${nodeTypeDefs}
   }
 `
 
@@ -32,7 +36,20 @@ const resolvers = {
     getHistories: () => findAll('history'),
   },
   Mutation: {
-    createHistory: combine(isAuthenticated, (_, { input }) => null),
+    createHistory: combine(isAuthenticated, async (_, { input }) => {
+      const { ogImage, ogDescription, ogTitle } = await crawlOpenGraph(
+        input.link
+      )
+      const cover = await resizeCover(ogImage.url, input.link)
+      const payload = {
+        cover,
+        title: ogTitle,
+        excerpt: ogDescription,
+        ...input,
+      }
+
+      return insertOne('history', payload)
+    }),
     deleteHistory: combine(isAuthenticated, (_, { id }) =>
       deleteById('history', id)
     ),

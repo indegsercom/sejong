@@ -15,6 +15,10 @@ export const findAll = async (table: string) => {
   }
 }
 
+export const findOne = async (table: string, id: string) => {
+  return db.one(sql`select * from ${toTable(table)} where id = ${id}`)
+}
+
 const toTable = (table: string) => {
   return sql.identifier([table])
 }

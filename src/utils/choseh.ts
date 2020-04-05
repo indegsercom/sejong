@@ -1,6 +1,7 @@
 import AWS from 'aws-sdk'
-import awsService from './awsService'
-import { db, sql, insert } from 'database'
+import awsService from './aws'
+import db from '../db/db'
+import { sql } from 'slonik'
 
 const upload = (
   config: Pick<AWS.S3.PutObjectRequest, 'ACL' | 'Key' | 'Bucket' | 'Body'>
@@ -73,9 +74,9 @@ const write = async ({ id, content }) => {
   return true
 }
 
-const chosehService = {
+const choseh = {
   get,
   write,
 }
 
-export default chosehService
+export default choseh
