@@ -1,9 +1,10 @@
 import { gql } from 'apollo-server-micro'
-import { findAll, deleteById, findOne } from '../db/queryHelper'
+import { findAll, deleteById, findOne, insertOne } from '../db/queryHelper'
 import combine from '../graphql/helpers/combine'
 import isAuthenticated from '../graphql/helpers/isAuthenticated'
 import { nodeTypeDefs } from '../graphql/typeDefs'
 import choseh from '../utils/choseh'
+import parisApi from '../utils/parisApi'
 
 const typeDefs = gql`
   extend type Query {
@@ -39,7 +40,20 @@ const resolvers = {
     getBooks: () => findAll('book'),
   },
   Mutation: {
-    createBook: combine(isAuthenticated, (_, { input }) => null),
+    createBook: combine(isAuthenticated, async (_, { input: data }) => {
+      let { cover } = data
+
+      if (cover) {
+        cover = await parisApi.resize(cover, { height: 480 })
+      }
+
+      const book = await insertOne('book', {
+        ...data,
+        cover,
+      })
+
+      return book
+    }),
     deleteBook: combine(isAuthenticated, (_, { id }) => deleteById('book', id)),
   },
   Book: {
