@@ -40,7 +40,7 @@ jobs:
       - name: Database migration
         run: npx db-migrate up
         env:
-          DATABASE_URL: ${{ secrets.DATABASE_URL }}/${{ env.PROJECT }}
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}/${{ env.ENV }}
       - name: Build
         run: npm run build
       - name: Deploy
@@ -48,5 +48,5 @@ jobs:
         with:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
-          repository: indegser/sejong-${{ env.PROJECT }}
+          repository: indegser/sejong-${{ env.ENV }}
           tags: latest
