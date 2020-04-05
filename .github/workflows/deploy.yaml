@@ -9,7 +9,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Set edge env
-        if: endsWith(github.ref, '/develop')
+        if: endsWith(github.ref, '/v2')
         run: |
           echo "::set-env name=ENV::edge"
       - name: Set prod env
