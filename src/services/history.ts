@@ -1,4 +1,7 @@
 import { gql } from 'apollo-server-micro'
+import { findAll, deleteById } from '../db/queryHelper'
+import combine from '../graphql/helpers/combine'
+import isAuthenticated from '../graphql/helpers/isAuthenticated'
 
 const typeDefs = gql`
   type Query {
@@ -10,10 +13,10 @@ const typeDefs = gql`
     comment: String
   }
 
-  # type Mutation {
-  #   createHistory(input: CreateHistoryInput): History
-  #   deleteHistory(id: ID!): Boolean
-  # }
+  type Mutation {
+    createHistory(input: CreateHistoryInput): History
+    deleteHistory(id: ID!): Boolean
+  }
 
   type History {
     title: String!
@@ -26,16 +29,14 @@ const typeDefs = gql`
 
 const resolvers = {
   Query: {
-    getHistories: () => [],
+    getHistories: () => findAll('history'),
   },
-  // Mutation: {
-  // createHistory: combine(isAuthenticated, (_, { input }) =>
-  //   historyService.createHistory(input)
-  // ),
-  // deleteHistory: combine(isAuthenticated, (_, { id }) =>
-  //   historyService.deleteHistory(id)
-  // ),
-  // },
+  Mutation: {
+    createHistory: combine(isAuthenticated, (_, { input }) => null),
+    deleteHistory: combine(isAuthenticated, (_, { id }) =>
+      deleteById('history', id)
+    ),
+  },
 }
 
 const historyService = {

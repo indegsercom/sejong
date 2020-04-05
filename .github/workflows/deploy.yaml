@@ -1,10 +1,9 @@
 on:
   push:
     branches:
-      - master
-      - develop
+      - v2
 
-name: Docker push
+name: Deploy
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -12,17 +11,30 @@ jobs:
       - name: Set edge env
         if: endsWith(github.ref, '/develop')
         run: |
-          echo "::set-env name=PROJECT::sejong-edge"
+          echo "::set-env name=ENV::edge"
       - name: Set prod env
         if: endsWith(github.ref, '/master')
         run: |
-          echo "::set-env name=PROJECT::sejong-prod"
+          echo "::set-env name=ENV::prod"
+
       - name: Checkout
         uses: actions/checkout@v1
+      - name: Use Node.js
+        uses: actions.setup-node@v1
+        with:
+          node-version: 10.x
+      - name: Install dependencies
+        run: npm install
+      - name: Database migration
+        run: npx db-migrate up
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}/${{ env.PROJECT }}
+      - name: Build
+        run: npm run build
       - name: Deploy
         uses: docker/build-push-action@v1
         with:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
-          repository: indegser/${{ env.PROJECT }}
+          repository: indegser/sejong-${{ env.PROJECT }}
           tags: latest

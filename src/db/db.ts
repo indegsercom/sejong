@@ -1,23 +1,10 @@
-import { MongoClient } from 'mongodb'
+import { createPool } from 'slonik'
+import { createFieldNameTransformationInterceptor } from 'slonik-interceptor-field-name-transformation'
 
-let db: MongoClient
-
-export const createPool = (callback: () => void) => {
-  MongoClient.connect(
-    'mongodb://localhost:27017/sejong',
-    { useUnifiedTopology: true },
-    function(err, database) {
-      if (err) {
-        console.error(`Could not connect to Mongodb client`)
-        console.error(err)
-        return
-      }
-
-      db = database
-
-      callback()
-    }
-  )
-}
+const db = createPool(process.env.DATABASE_URL, {
+  interceptors: [
+    createFieldNameTransformationInterceptor({ format: 'CAMEL_CASE' }),
+  ],
+})
 
 export default db
