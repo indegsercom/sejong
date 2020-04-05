@@ -6,6 +6,28 @@ import crawlOpenGraph from './history/crawlOpenGraph'
 import resizeCover from './history/resizeCover'
 import { nodeTypeDefs } from '../graphql/typeDefs'
 
+/**
+ * const deleteHistory = async (historyId: string) => {
+  const { cover } = await db.one(sql`
+    delete from history
+    where id = ${historyId}
+    returning history.cover;
+  `)
+
+  const coverSplit = cover.split('/')
+  const Key = coverSplit[coverSplit.length - 1]
+
+  await awsService.s3
+    .deleteObject({
+      Bucket: 'cdn.indegser.com',
+      Key,
+    })
+    .promise()
+
+  return true
+}
+ */
+
 const typeDefs = gql`
   type Query {
     getHistories: [History]
