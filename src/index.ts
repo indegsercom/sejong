@@ -43,6 +43,15 @@ const server = new ApolloServer({
 
 const PORT = process.env.PORT || 3000
 
-micro(cors(server.createHandler())).listen(PORT, () =>
-  console.log(`Micro on port: ${PORT}`)
-)
+const handler = server.createHandler()
+
+micro(
+  cors((req, res) => {
+    if (req.method === 'OPTIONS') {
+      res.statusCode = 200
+      res.end()
+    } else {
+      handler(req, res)
+    }
+  })
+).listen(PORT, () => console.log(`Micro on port: ${PORT}`))
