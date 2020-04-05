@@ -8,27 +8,26 @@ import parisApi from '../utils/parisApi'
 
 const typeDefs = gql`
   extend type Query {
-    getBook: Book
+    getBook(id: ID!): Book
     getBooks: [Book]
   }
 
   input CreateBookInput {
-    link: String!
-    comment: String
+    title: String!
+    cover: String
+    authors: [String!]!
+    publishedYear: Int!
   }
 
   extend type Mutation {
-    createBook(input: CreateBookInput): Book
+    createBook(book: CreateBookInput!): Book
     deleteBook(id: ID!): Boolean
   }
 
   type Book {
     title: String!
-    excerpt: String!
-    link: String!
     cover: String
-    citation: String
-    comment: String
+    citation: String!
     choseh: Choseh
     ${nodeTypeDefs}
   }
@@ -36,11 +35,13 @@ const typeDefs = gql`
 
 const resolvers = {
   Query: {
-    getBook: (_, { id }) => findOne('book', id),
+    getBook: async (_, { id }) => {
+      return findOne('book', id)
+    },
     getBooks: () => findAll('book'),
   },
   Mutation: {
-    createBook: combine(isAuthenticated, async (_, { input: data }) => {
+    createBook: combine(isAuthenticated, async (_, { book: data }) => {
       let { cover } = data
 
       if (cover) {

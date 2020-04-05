@@ -7,7 +7,9 @@ const camelToSnakeCase = (str) =>
 export const findAll = async (table: string) => {
   let result = []
   try {
-    result = await db.many(sql`select * from ${sql.identifier([table])}`)
+    result = await db.many(
+      sql`select * from ${sql.identifier([table])} order by modified_at desc`
+    )
   } catch (err) {
     console.log(err)
   } finally {
