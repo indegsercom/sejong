@@ -7,8 +7,8 @@ const s3 = new AWS.S3({
   secretAccessKey: AWS_SECRET,
 })
 
-const awsService = {
+const aws = {
   s3,
 }
 
-export default awsService
+export default aws

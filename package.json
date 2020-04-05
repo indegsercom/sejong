@@ -2,11 +2,11 @@
   "name": "sejong",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
   "scripts": {
-    "dev": "next dev",
-    "build": "next build",
-    "start": "next start"
+    "dev": "tsc-watch --onSuccess 'npm start'",
+    "build": "rm -rf build; ncc build src/index.ts -o build",
+    "start": "node build/index.js",
+    "migrate": "db-migrate"
   },
   "repository": {
     "type": "git",
@@ -20,7 +20,7 @@
   },
   "homepage": "https://github.com/indegsercom/sejong#readme",
   "dependencies": {
-    "apollo-server-micro": "^2.10.1",
+    "apollo-server-micro": "^2.11.0",
     "aws-sdk": "^2.630.0",
     "axios": "^0.19.2",
     "dotenv": "^8.2.0",
@@ -28,22 +28,24 @@
     "http-errors": "^1.7.3",
     "iconv-lite": "^0.5.1",
     "jsonwebtoken": "^8.5.1",
+    "micro": "^9.3.4",
     "micro-cors": "^0.1.1",
-    "nanoid": "^2.1.10",
-    "next": "^9.3.4",
     "open-graph-scraper": "^3.6.2",
     "parse-favicon": "^2.0.0",
-    "react": "^16.12.0",
-    "react-dom": "^16.12.0",
-    "slonik": "^21.4.2",
+    "slonik": "^22.4.4",
     "slonik-interceptor-field-name-transformation": "^1.5.3"
   },
   "devDependencies": {
     "@types/http-errors": "^1.6.3",
     "@types/jsonwebtoken": "^8.3.8",
+    "@types/micro": "^7.3.3",
     "@types/node": "^13.1.7",
-    "@types/react": "^16.9.17",
-    "typescript": "^3.7.5"
+    "@types/slonik": "^22.1.2",
+    "@zeit/ncc": "^0.22.0",
+    "db-migrate": "^0.11.6",
+    "db-migrate-pg": "^1.0.0",
+    "tsc-watch": "^4.2.3",
+    "typescript": "^3.8.3"
   },
   "prettier": {
     "trailingComma": "es5",
