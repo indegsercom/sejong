@@ -37,6 +37,7 @@ type Book implements Node {
   publishedYear: Int!
   createdAt: Datetime
   modifiedAt: Datetime
+  citation: String
 }
 
 """
