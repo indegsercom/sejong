@@ -3,6 +3,7 @@ require('dotenv').config()
 import express from 'express'
 import cors from 'cors'
 import { postgraphile, PostGraphileOptions } from 'postgraphile'
+import createHistoryPlugin from './plugins/createHistoryPlugin'
 
 const app = express()
 // app.options('*', cors(), (req, res) => {
@@ -23,7 +24,6 @@ const postgraphileOptions: Partial<PostGraphileOptions> = production
       ignoreRBAC: false,
       ignoreIndexes: false,
       extendedErrors: ['errcode'],
-      appendPlugins: [require('@graphile-contrib/pg-simplify-inflector')],
       graphiql: false,
       enableQueryBatching: true,
       disableQueryLog: true, // our default logging has performance issues, but do make sure you have a logging system in place!
@@ -38,7 +38,6 @@ const postgraphileOptions: Partial<PostGraphileOptions> = production
       ignoreIndexes: false,
       showErrorStack: 'json',
       extendedErrors: ['hint', 'detail', 'errcode'],
-      appendPlugins: [require('@graphile-contrib/pg-simplify-inflector')],
       exportGqlSchemaPath: 'schema.graphql',
       graphiql: true,
       enhanceGraphiql: true,
@@ -54,6 +53,10 @@ app
       pgDefaultRole: 'visitor',
       jwtPgTypeIdentifier: 'public.jwt_token',
       jwtSecret: JWT_SECRET,
+      appendPlugins: [
+        require('@graphile-contrib/pg-simplify-inflector'),
+        createHistoryPlugin,
+      ],
     })
   )
   .listen(PORT, () => {
