@@ -1,57 +1,64 @@
 require('dotenv').config()
 
-import micro from 'micro'
-import Cors from 'micro-cors'
-import { ApolloServer } from 'apollo-server-micro'
-import historyService from './services/history'
-import bookService from './services/book'
-import jwt from 'jsonwebtoken'
-import chosehService from './services/choseh'
+import express from 'express'
+import cors from 'cors'
+import { postgraphile, PostGraphileOptions } from 'postgraphile'
+import createHistoryPlugin from './plugins/createHistoryPlugin'
 
-const cors = Cors({
-  allowMethods: ['POST', 'GET', 'OPTIONS'],
-})
+const app = express()
+// app.options('*', cors(), (req, res) => {
+//   console.log('hello?')
+//   res.status(200).send()
+// })
 
-const server = new ApolloServer({
-  typeDefs: [
-    chosehService.typeDefs,
-    historyService.typeDefs,
-    bookService.typeDefs,
-  ],
-  resolvers: [
-    chosehService.resolvers,
-    historyService.resolvers,
-    bookService.resolvers,
-  ],
-  playground: true,
-  context: ({ req }) => {
-    const token = req.headers.authorization
+const production = process.env.NODE_ENV === 'production'
 
-    try {
-      const result: any = jwt.verify(token, process.env.JWT_SECRET)
-      return {
-        isAdmin: result.role === 'admin',
-      }
-    } catch (err) {
-      if (!process.env.JWT_SECRET) {
-        console.warn('JWT empty')
-      }
+const { PORT = 3000, JWT_SECRET } = process.env
+
+const postgraphileOptions: Partial<PostGraphileOptions> = production
+  ? {
+      subscriptions: true,
+      retryOnInitFail: true,
+      dynamicJson: true,
+      setofFunctionsContainNulls: false,
+      ignoreRBAC: false,
+      ignoreIndexes: false,
+      extendedErrors: ['errcode'],
+      graphiql: false,
+      enableQueryBatching: true,
+      disableQueryLog: true, // our default logging has performance issues, but do make sure you have a logging system in place!
+      legacyRelations: 'omit',
     }
-  },
-  introspection: true,
-})
-
-const PORT = process.env.PORT || 3000
-
-const handler = server.createHandler()
-
-micro(
-  cors((req, res) => {
-    if (req.method === 'OPTIONS') {
-      res.statusCode = 200
-      res.end()
-    } else {
-      handler(req, res)
+  : {
+      subscriptions: true,
+      watchPg: true,
+      dynamicJson: true,
+      setofFunctionsContainNulls: false,
+      ignoreRBAC: false,
+      ignoreIndexes: false,
+      showErrorStack: 'json',
+      extendedErrors: ['hint', 'detail', 'errcode'],
+      exportGqlSchemaPath: 'schema.graphql',
+      graphiql: true,
+      enhanceGraphiql: true,
+      enableQueryBatching: true,
+      legacyRelations: 'omit',
     }
+
+app
+  .use(
+    postgraphile(process.env.DATABASE_URL, 'public', {
+      ...postgraphileOptions,
+      enableCors: true,
+      pgDefaultRole: 'visitor',
+      jwtPgTypeIdentifier: 'public.jwt_token',
+      jwtSecret: JWT_SECRET,
+      appendPlugins: [
+        require('@graphile-contrib/pg-simplify-inflector'),
+        createHistoryPlugin,
+      ],
+    })
+  )
+  .listen(PORT, () => {
+    console.log(`Listening on ${PORT}`)
   })
-).listen(PORT, () => console.log(`Micro on port: ${PORT}`))
