@@ -4,6 +4,9 @@ on:
       - develop
       - master
 
+env:
+  IMAGE: indegser/sejong:${{ github.sha }}
+
 name: Deploy
 jobs:
   build:
@@ -12,45 +15,54 @@ jobs:
       - uses: azure/login@v1
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
-#       - name: Set edge env
-#         if: endsWith(github.ref, '/develop')
-#         run: |
-#           echo "::set-env name=ENV::edge"
-#       - name: Set prod env
-#         if: endsWith(github.ref, '/master')
-#         run: |
-#           echo "::set-env name=ENV::prod"
+      - name: Set edge env
+        if: endsWith(github.ref, '/develop')
+        run: |
+          echo "::set-env name=ENV::edge"
+      - name: Set prod env
+        if: endsWith(github.ref, '/master')
+        run: |
+          echo "::set-env name=ENV::prod"
 
-#       - name: Checkout
-#         uses: actions/checkout@v2
+      - name: Checkout
+        uses: actions/checkout@v2
 
-#       - name: Cache node modules
-#         uses: actions/cache@v1
-#         env:
-#           cache-name: cache-node-modules
-#         with:
-#           path: ~/.npm # npm cache files are stored in `~/.npm` on Linux/macOS
-#           key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json') }}
-#           restore-keys: |
-#             ${{ runner.os }}-build-${{ env.cache-name }}-
-#             ${{ runner.os }}-build-
-#             ${{ runner.os }}-
-#       - name: Use Node.js
-#         uses: actions/setup-node@v1
-#         with:
-#           node-version: 10.x
-#       - name: Install dependencies
-#         run: npm install
-#       - name: Database migration
-#         run: npx db-migrate up
-#         env:
-#           DATABASE_URL: ${{ secrets.DATABASE_URL }}/${{ env.ENV }}
-#       - name: Build
-#         run: npm run build
-#       - name: Deploy
-#         uses: docker/build-push-action@v1
-#         with:
-#           username: ${{ secrets.DOCKER_USERNAME }}
-#           password: ${{ secrets.DOCKER_PASSWORD }}
-#           repository: indegser/sejong-${{ env.ENV }}
-#           tags: latest
+      - name: Cache node modules
+        uses: actions/cache@v1
+        env:
+          cache-name: cache-node-modules
+        with:
+          path: ~/.npm # npm cache files are stored in `~/.npm` on Linux/macOS
+          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-build-${{ env.cache-name }}-
+            ${{ runner.os }}-build-
+            ${{ runner.os }}-
+      - name: Use Node.js
+        uses: actions/setup-node@v1
+        with:
+          node-version: 10.x
+      - name: Install dependencies
+        run: npm install
+      - name: Database migration
+        run: npx db-migrate up
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}/${{ env.ENV }}
+      - name: Build
+        run: npm run build
+      - name: Docker
+        uses: docker/build-push-action@v1
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+          repository: indegser/sejong
+          tags: ${{ github.sha }}
+      - name: Deploy
+        uses: azure/webapps-deploy@v2
+        with:
+          app-name: sejong-${{ env.ENV }}
+          images: ${{ env.IMAGE }}
+          
+      - name: Azure logout
+        run: |
+          az logout
