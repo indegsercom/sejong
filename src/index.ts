@@ -1,7 +1,6 @@
 require('dotenv').config()
 
 import express from 'express'
-import cors from 'cors'
 import { postgraphile, PostGraphileOptions } from 'postgraphile'
 import createHistoryPlugin from './plugins/createHistoryPlugin'
 
@@ -60,5 +59,5 @@ app
     })
   )
   .listen(PORT, () => {
-    console.log(`Listening on ${PORT}`)
+    console.log(`Listening on ${PORT}. Production=${production}`)
   })
