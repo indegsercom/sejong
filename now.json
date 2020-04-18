@@ -1,0 +1,12 @@
+{
+  "regions": ["icn1"],
+  "routes": [
+    {
+      "src": "/api(.*)",
+      "headers": {
+        "access-control-allow-origin": "*",
+        "cache-control": "s-maxage=1, stale-while-revalidate"
+      }
+    }
+  ]
+}
