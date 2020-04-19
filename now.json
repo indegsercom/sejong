@@ -3,6 +3,16 @@
   "routes": [
     {
       "src": "/api(.*)",
+      "methods": ["OPTIONS"],
+      "headers": {
+        "access-control-allow-origin": "*",
+        "Access-Control-Allow-Methods": "POST, PUT, DELETE, OPTIONS",
+        "Access-Control-Allow-Headers": "Content-Type"
+      },
+      "dest": "/api/ok.ts"
+    },
+    {
+      "src": "/api(.*)",
       "headers": {
         "access-control-allow-origin": "*",
         "cache-control": "s-maxage=1, stale-while-revalidate"
