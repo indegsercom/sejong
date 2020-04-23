@@ -19,6 +19,7 @@ const jwt = async (t: DatabaseTransactionConnectionType, req: NowRequest) => {
 
   if (authHeader) {
     const [prefix, token] = authHeader.split(' ')
+
     if (prefix === 'Bearer') {
       try {
         const verified = jsonwebtoken.verify(token, process.env.JWT_SECRET)

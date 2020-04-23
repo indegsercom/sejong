@@ -7,7 +7,7 @@
       "headers": {
         "access-control-allow-origin": "*",
         "Access-Control-Allow-Methods": "POST, PUT, DELETE, OPTIONS",
-        "Access-Control-Allow-Headers": "Content-Type"
+        "Access-Control-Allow-Headers": "Content-Type, Authorization"
       },
       "dest": "/api/ok.ts"
     },
