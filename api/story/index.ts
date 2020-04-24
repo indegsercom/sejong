@@ -10,7 +10,9 @@ export default async (req: NowRequest, res: NowResponse) => {
   switch (req.method) {
     case 'GET': {
       tx((t) =>
-        t.many(sql`select id, slug, front_matter, modified_at from story`)
+        t.many(
+          sql`select id, slug, front_matter, modified_at from story order by modified_at desc`
+        )
       )
         .then((d) => res.json(d))
         .catch((err) => res.json([]))
@@ -32,10 +34,11 @@ export default async (req: NowRequest, res: NowResponse) => {
           repo: 'story',
           message: `Update story`,
           content: c,
-          path: `${slug}.md`,
+          branch: process.env.NOW_GITHUB_COMMIT_REF || 'local',
+          path: `${slug}/content.md`,
         })
 
-        const { sha, git_url, download_url } = fileResponse.data.content
+        const { sha } = fileResponse.data.content
 
         const result = await tx((t) => {
           return t.one(sql`
