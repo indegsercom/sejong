@@ -1,22 +1,28 @@
 {
   "regions": ["icn1"],
+  "version": 2,
   "routes": [
     {
       "src": "/api(.*)",
       "methods": ["OPTIONS"],
       "headers": {
         "access-control-allow-origin": "*",
-        "Access-Control-Allow-Methods": "POST, PUT, DELETE, OPTIONS",
-        "Access-Control-Allow-Headers": "Content-Type, Authorization"
+        "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
+        "Access-Control-Allow-Headers": "Content-Type, Authorization",
+        "cache-control": "s-maxage=1, stale-while-revalidate"
       },
       "dest": "/api/ok.ts"
     },
     {
-      "src": "/api(.*)",
+      "src": "/api/.*",
       "headers": {
         "access-control-allow-origin": "*",
+        "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
+        "Access-Control-Allow-Headers": "Content-Type, Authorization",
         "cache-control": "s-maxage=1, stale-while-revalidate"
-      }
-    }
+      },
+      "continue": true
+    },
+    { "handle": "filesystem" }
   ]
 }
