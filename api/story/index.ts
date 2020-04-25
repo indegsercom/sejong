@@ -3,6 +3,7 @@ import { transaction } from '../_lib/db'
 import { sql } from 'slonik'
 import gray from 'gray-matter'
 import octokit from '../_lib/octokit'
+import { storyBranch } from '../_lib/config'
 
 export default async (req: NowRequest, res: NowResponse) => {
   const tx = transaction(req)
@@ -21,7 +22,6 @@ export default async (req: NowRequest, res: NowResponse) => {
     default: {
       const { content } = req.body
       const { data } = gray(content)
-
       const iso = new Date().toISOString()
       const prefix = iso.slice(0, 10).replace(/-/g, '/')
       const slug = `${prefix}/${req.body.slug}`
@@ -32,18 +32,29 @@ export default async (req: NowRequest, res: NowResponse) => {
         const fileResponse = await octokit.repos.createOrUpdateFile({
           owner: 'indegser',
           repo: 'story',
-          message: `Update story`,
+          message: `Create ${slug}`,
           content: c,
-          branch: process.env.NOW_GITHUB_COMMIT_REF || 'local',
+          branch: storyBranch,
           path: `${slug}/content.md`,
         })
 
-        const { sha } = fileResponse.data.content
-
+        const { commit, content } = fileResponse.data
+        const github = {
+          commit: {
+            sha: commit.sha,
+            branch: storyBranch,
+            message: commit.message,
+          },
+          file: {
+            sha: content.sha,
+            downloadUrl: content.download_url,
+            gitUrl: content.git_url,
+          },
+        }
         const result = await tx((t) => {
           return t.one(sql`
-            insert into story(slug, sha, front_matter) values (${sql.join(
-              [slug, sha, JSON.stringify(data)],
+            insert into story(slug, front_matter, github) values (${sql.join(
+              [slug, JSON.stringify(data), JSON.stringify(github)],
               sql`,`
             )})
             returning *

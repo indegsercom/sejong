@@ -12,7 +12,7 @@ export default async (req: NowRequest, res: NowResponse) => {
 
   db.one(
     sql`
-    select slug, sha, front_matter, modified_at from story where slug = ${slug}
+    select * from story where slug = ${slug}
   `
   )
     .then((data) => void res.json(data))
