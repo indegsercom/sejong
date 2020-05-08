@@ -19,9 +19,7 @@
   "dependencies": {
     "@octokit/rest": "^17.5.1",
     "gray-matter": "^4.0.2",
-    "iconv-lite": "^0.5.1",
     "jsonwebtoken": "^8.5.1",
-    "open-graph-scraper": "^3.6.2",
     "slonik": "^22.4.4",
     "slonik-interceptor-field-name-transformation": "^1.5.3"
   },
@@ -32,7 +30,7 @@
     "@types/slonik": "^22.1.2",
     "db-migrate": "^0.11.10",
     "db-migrate-pg": "^1.2.1",
-    "now": "^18.0.0"
+    "now": "^19.0.0"
   },
   "prettier": {
     "trailingComma": "es5",

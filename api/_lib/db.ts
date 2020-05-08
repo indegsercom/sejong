@@ -36,7 +36,7 @@ const jwt = async (t: DatabaseTransactionConnectionType, req: NowRequest) => {
 export const transaction = <T>(req: NowRequest) => {
   return (handler: TransactionFunctionType<T>) => {
     return db.transaction(async (t) => {
-      await jwt(t, req)
+      // await jwt(t, req)
       return handler(t)
     })
   }

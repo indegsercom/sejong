@@ -12,7 +12,7 @@ export default async (req: NowRequest, res: NowResponse) => {
 
   const token = jwt.sign(payload, process.env.JWT_SECRET, {
     issuer: 'sejong',
-    audience: 'sejong',
+    audience: 'indegser',
   })
 
   res.json({ token })

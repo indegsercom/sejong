@@ -1,2 +1,2 @@
 /* Replace with your SQL commands */
-drop table choseh;
+drop table story;
