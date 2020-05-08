@@ -10,6 +10,10 @@ export default async (req: NowRequest, res: NowResponse) => {
     select * from authenticate(${sql.join([email, password], sql`,`)})
   `)
 
+  if (!payload) {
+    return res.status(400).end()
+  }
+
   const token = jwt.sign(payload, process.env.JWT_SECRET, {
     issuer: 'sejong',
     audience: 'indegser',
