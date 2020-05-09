@@ -1,8 +1,9 @@
 create table if not exists story (
   id serial primary key,
   slug text unique,
-  data jsonb,
-  content text,
+  data jsonb not null,
+  git jsonb not null,
+  content text not null,
   created_at timestamptz default now(),
   modified_at timestamptz default now()
 );
