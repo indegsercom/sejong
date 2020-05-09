@@ -9,6 +9,10 @@ export const createStoryMd = async (
   content: string,
   sha?: string
 ) => {
+  console.log(
+    'Creating story markdown in branch: ',
+    process.env.STORY_GIT_BRANCH
+  )
   const { data } = await octokit.repos.createOrUpdateFile({
     repo: 'story',
     owner: 'indegser',
