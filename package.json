@@ -3,10 +3,7 @@
   "version": "1.0.0",
   "description": "",
   "scripts": {
-    "dev": "tsc-watch --onSuccess 'npm start'",
-    "build": "rm -rf build; ncc build src/index.ts -o build",
-    "start": "node build/index.js",
-    "migrate": "db-migrate"
+    "migrate": "npx db-migrate up"
   },
   "repository": {
     "type": "git",
@@ -20,36 +17,20 @@
   },
   "homepage": "https://github.com/indegsercom/sejong#readme",
   "dependencies": {
-    "@graphile-contrib/pg-simplify-inflector": "^5.0.0-beta.1",
-    "apollo-server-micro": "^2.11.0",
-    "aws-sdk": "^2.630.0",
-    "axios": "^0.19.2",
-    "cors": "^2.8.5",
-    "dotenv": "^8.2.0",
-    "express": "^4.17.1",
-    "graphql-resolvers": "^0.4.2",
-    "http-errors": "^1.7.3",
-    "iconv-lite": "^0.5.1",
+    "@octokit/rest": "^17.5.1",
+    "gray-matter": "^4.0.2",
     "jsonwebtoken": "^8.5.1",
-    "micro": "^9.3.4",
-    "micro-cors": "^0.1.1",
-    "open-graph-scraper": "^3.6.2",
-    "parse-favicon": "^2.0.0",
-    "postgraphile": "^4.6.0",
     "slonik": "^22.4.4",
     "slonik-interceptor-field-name-transformation": "^1.5.3"
   },
   "devDependencies": {
-    "@types/http-errors": "^1.6.3",
+    "@now/node": "^1.5.1",
     "@types/jsonwebtoken": "^8.3.8",
-    "@types/micro": "^7.3.3",
     "@types/node": "^13.1.7",
     "@types/slonik": "^22.1.2",
-    "@zeit/ncc": "^0.22.0",
-    "db-migrate": "^0.11.6",
-    "db-migrate-pg": "^1.0.0",
-    "tsc-watch": "^4.2.3",
-    "typescript": "^3.8.3"
+    "db-migrate": "^0.11.10",
+    "db-migrate-pg": "^1.2.1",
+    "now": "^19.0.0"
   },
   "prettier": {
     "trailingComma": "es5",
