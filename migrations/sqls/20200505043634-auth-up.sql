@@ -1,18 +1,13 @@
 /* Replace with your SQL commands */
-create schema _private;
+create schema if not exists _private;
 create extension if not exists "pgcrypto";
 
-create type jwt_token as (
-  role text,
-  exp bigint
-);
-
-create table _private.account (
+create table if not exists _private.account (
   email            text not null unique check (email ~* '^.+@.+\..+$'),
   password_hash    text not null
 );
 
-create function _private.register(
+create or replace function _private.register(
   email text,
   password text
 ) returns boolean as $$
@@ -23,10 +18,10 @@ begin
 end;
 $$ language plpgsql strict security definer;
 
-create function authenticate(
+create or replace function authenticate(
   email text,
   password text
-) returns jwt_token as $$
+) returns boolean as $$
 declare
   account _private.account;
 begin
@@ -35,9 +30,9 @@ begin
   where a.email = $1;
 
   if account.password_hash = crypt(password, account.password_hash) then
-    return ('editor',extract(epoch from (now() + interval '2 days')))::jwt_token;
+    return true;
   else
-    return null;
+    return false;
   end if;
 end;
 $$ language plpgsql strict security definer;
